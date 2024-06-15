@@ -5,6 +5,8 @@ using static DevToys.Api.GUI;
 using System.Reflection.Emit;
 using System.Reflection.PortableExecutable;
 using System.Threading;
+using System.Xml.Linq;
+using TranslatorRESXDevToys.Services;
 
 namespace TranslatorRESXDevToys;
 
@@ -24,13 +26,18 @@ namespace TranslatorRESXDevToys;
     AccessibleNameResourceName = nameof(ExtensionText.AccessibleName))]
 internal sealed class MyExtensionGui : IGuiTool
 {
-    private SandboxedFileReader[]? selectedFiles;
+    private SandboxedFileReader[]? _selectedFiles;
 
     [Import]
-    private IFileStorage _fileStorage = null;
+    private IFileStorage _fileStorage = null!;
 
     private string _fromLanguage = "en";
     private string _toLanguage = "es";
+    private string _region = "northeurope";
+    private string _key = "YOUR_KEY_HERE";
+
+
+    private static AzureTranslatorService _azureTranslatorService;
 
     
     public UIToolView View
@@ -61,10 +68,23 @@ internal sealed class MyExtensionGui : IGuiTool
                         .Text("es")
                         .OnTextChanged(OnToTextChanged)
                 );
+            
+            IUIStack horizontalSection2 = Stack()
+                .Horizontal()
+                .WithChildren(
+                    SingleLineTextInput()
+                        .Title("From Language")
+                        .Text("en")
+                        .OnTextChanged(OnFromTextChanged),
+                    SingleLineTextInput()
+                        .Title("To Language")
+                        .Text("es")
+                        .OnTextChanged(OnToTextChanged)
+                );
 
             IUIStack rootElement = Stack()
                 .Vertical()
-                .WithChildren(horizontalSection, verticalSection);
+                .WithChildren(horizontalSection, verticalSection, horizontalSection2);
 
             return new UIToolView(true, rootElement);
         }
@@ -78,28 +98,44 @@ internal sealed class MyExtensionGui : IGuiTool
 
     private async ValueTask OnButtonClickAsync()
     {
-        if (selectedFiles is not null && selectedFiles.Any())
+        
+        if (_selectedFiles is not null && _selectedFiles.Any())
         {
-            var file = selectedFiles.FirstOrDefault();
+            var file = _selectedFiles.FirstOrDefault();
             if (file is not null)
             {
-                await using var stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
-                using var streamReader = new StreamReader(stream);
+                await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
+                StreamReader streamReader = new StreamReader(stream);
 
-                string line;
-                while ((line = await streamReader.ReadLineAsync()) != null)
-                {
-                    // Process the line
-                    
-                    Console.WriteLine(line);
-                }
+                await using FileStream  result = await _fileStorage.PickSaveFileAsync(".resx");
+                StreamWriter writer = new StreamWriter(result);
+                
+
+                _azureTranslatorService = new AzureTranslatorService(_region, _key);
+                
+                XDocument xmlDoc = XDocument.Load(streamReader);
+
+                await TranslateXmlValues(xmlDoc, _toLanguage, _fromLanguage);
+
+                xmlDoc.Save(writer.BaseStream);
+                
             }
+        }
+    }
+    private static async Task TranslateXmlValues(XDocument xmlDoc, string targetLanguage, string fromLanguage)
+    {
+        var valueElements = xmlDoc.Descendants("data").Elements("value").ToList();
+
+        foreach (var valueElement in valueElements)
+        {
+            string originalContent = valueElement.Value;
+            valueElement.Value = await _azureTranslatorService.Translator(fromLanguage, targetLanguage, originalContent);
         }
     }
 
     private void OnFilesSelected(SandboxedFileReader[] files)
     {
-        selectedFiles = files;
+        _selectedFiles = files;
     }
     private void OnFromTextChanged(string text)
     {
