@@ -99,27 +99,36 @@ internal sealed class MyExtensionGui : IGuiTool
     private async ValueTask OnButtonClickAsync()
     {
         
-        if (_selectedFiles is not null && _selectedFiles.Any())
+        try
         {
-            var file = _selectedFiles.FirstOrDefault();
-            if (file is not null)
+            if (_selectedFiles is not null && _selectedFiles.Any())
             {
-                await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
-                StreamReader streamReader = new StreamReader(stream);
+                var file = _selectedFiles.FirstOrDefault();
+                if (file is not null)
+                {
+                    await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
+                    StreamReader streamReader = new StreamReader(stream);
 
-                await using FileStream  result = await _fileStorage.PickSaveFileAsync(".resx");
-                StreamWriter writer = new StreamWriter(result);
-                
+                    await using FileStream result = await _fileStorage.PickSaveFileAsync(".resx");
+                    StreamWriter writer = new StreamWriter(result);
 
-                _azureTranslatorService = new AzureTranslatorService(_region, _key);
-                
-                XDocument xmlDoc = XDocument.Load(streamReader);
 
-                await TranslateXmlValues(xmlDoc, _toLanguage, _fromLanguage);
+                    _azureTranslatorService = new AzureTranslatorService( _key, _region);
 
-                xmlDoc.Save(writer.BaseStream);
-                
+                    XDocument xmlDoc =
+                        await XDocument.LoadAsync(streamReader, LoadOptions.None, CancellationToken.None);
+
+                    await TranslateXmlValues(xmlDoc, _toLanguage, _fromLanguage);
+
+                    await writer.WriteAsync(xmlDoc.ToString());
+                    await writer.FlushAsync();
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
     private static async Task TranslateXmlValues(XDocument xmlDoc, string targetLanguage, string fromLanguage)
