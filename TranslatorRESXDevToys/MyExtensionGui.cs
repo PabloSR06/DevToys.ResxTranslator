@@ -9,14 +9,16 @@ using System.Threading;
 namespace TranslatorRESXDevToys;
 
 [Export(typeof(IGuiTool))]
-[Name("TranslatorRESXDevToys")]                                                         // A unique, internal name of the tool.
+[Name("TranslatorRESXDevToys")] // A unique, internal name of the tool.
 [ToolDisplayInformation(
-    IconFontName = "FluentSystemIcons",                                       // This font is available by default in DevToys
-    IconGlyph = '\uE670',                                                     // An icon that represents a pizza
-    GroupName = PredefinedCommonToolGroupNames.Converters,                    // The group in which the tool will appear in the side bar.
+    IconFontName = "FluentSystemIcons", // This font is available by default in DevToys
+    IconGlyph = '\uE670', // An icon that represents a pizza
+    GroupName = PredefinedCommonToolGroupNames.Converters, // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(MyResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
-    ResourceManagerBaseName = "TranslatorRESXDevToys.TranslatorRESXDevToys",                      // The full name (including namespace) of the resource file containing our localized texts
-    ShortDisplayTitleResourceName = nameof(ExtensionText.ShortDisplayTitle),    // The name of the resource to use for the short display title
+    ResourceManagerBaseName =
+        "TranslatorRESXDevToys.TranslatorRESXDevToys", // The full name (including namespace) of the resource file containing our localized texts
+    ShortDisplayTitleResourceName =
+        nameof(ExtensionText.ShortDisplayTitle), // The name of the resource to use for the short display title
     LongDisplayTitleResourceName = nameof(ExtensionText.LongDisplayTitle),
     DescriptionResourceName = nameof(ExtensionText.Description),
     AccessibleNameResourceName = nameof(ExtensionText.AccessibleName))]
@@ -24,25 +26,51 @@ internal sealed class MyExtensionGui : IGuiTool
 {
     private SandboxedFileReader[]? selectedFiles;
 
-    [Import] // Import the file storage service.
+    [Import]
     private IFileStorage _fileStorage = null;
-    
 
+    private string _fromLanguage = "en";
+    private string _toLanguage = "es";
+
+    
     public UIToolView View
-        => new UIToolView(
-            Stack()
-                .Horizontal()
+    {
+        get
+        {
+            IUIStack verticalSection = Stack()
+                .Vertical()
                 .WithChildren(
                     FileSelector()
-                        .CanSelectManyFiles()  // Allow multiple file selection
-                        .LimitFileTypesTo(".resx")  // Limit file types to .resx
-                        .OnFilesSelected(OnFilesSelected),  // Handle file selection event
+                        .CanSelectManyFiles()
+                        .LimitFileTypesTo(".resx")
+                        .OnFilesSelected(OnFilesSelected),
                     Button()
-                        .Text("Click me")  // Button text
-                        .OnClick(OnButtonClickAsync)  // Handle button click event
-                )
-        );
+                        .Text("Click me")
+                        .OnClick(OnButtonClickAsync)
+                );
 
+            IUIStack horizontalSection = Stack()
+                .Horizontal()
+                .WithChildren(
+                    SingleLineTextInput()
+                        .Title("From Language")
+                        .Text("en")
+                        .OnTextChanged(OnFromTextChanged),
+                    SingleLineTextInput()
+                        .Title("To Language")
+                        .Text("es")
+                        .OnTextChanged(OnToTextChanged)
+                );
+
+            IUIStack rootElement = Stack()
+                .Vertical()
+                .WithChildren(horizontalSection, verticalSection);
+
+            return new UIToolView(true, rootElement);
+        }
+    }
+
+    
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {
         // Handle Smart Detection.
@@ -61,8 +89,8 @@ internal sealed class MyExtensionGui : IGuiTool
                 string line;
                 while ((line = await streamReader.ReadLineAsync()) != null)
                 {
-
                     // Process the line
+                    
                     Console.WriteLine(line);
                 }
             }
@@ -71,7 +99,15 @@ internal sealed class MyExtensionGui : IGuiTool
 
     private void OnFilesSelected(SandboxedFileReader[] files)
     {
-        // Guardar los archivos seleccionados
         selectedFiles = files;
+    }
+    private void OnFromTextChanged(string text)
+    {
+        _fromLanguage = text;
+    }
+
+    private void OnToTextChanged(string text)
+    {
+        _toLanguage = text;
     }
 }
