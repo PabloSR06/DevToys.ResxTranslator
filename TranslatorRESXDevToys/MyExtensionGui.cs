@@ -39,22 +39,13 @@ internal sealed class MyExtensionGui : IGuiTool
 
     private static AzureTranslatorService _azureTranslatorService;
 
-    
+    private readonly IUIProgressRing _progressRing = ProgressRing();
+
     public UIToolView View
     {
         get
         {
-            IUIStack verticalSection = Stack()
-                .Vertical()
-                .WithChildren(
-                    FileSelector()
-                        .CanSelectManyFiles()
-                        .LimitFileTypesTo(".resx")
-                        .OnFilesSelected(OnFilesSelected),
-                    Button()
-                        .Text("Click me")
-                        .OnClick(OnButtonClickAsync)
-                );
+ 
 
             IUIStack horizontalSection = Stack()
                 .Horizontal()
@@ -69,22 +60,22 @@ internal sealed class MyExtensionGui : IGuiTool
                         .OnTextChanged(OnToTextChanged)
                 );
             
-            IUIStack horizontalSection2 = Stack()
-                .Horizontal()
+            IUIStack verticalSection = Stack()
+                .Vertical()
                 .WithChildren(
-                    SingleLineTextInput()
-                        .Title("From Language")
-                        .Text("en")
-                        .OnTextChanged(OnFromTextChanged),
-                    SingleLineTextInput()
-                        .Title("To Language")
-                        .Text("es")
-                        .OnTextChanged(OnToTextChanged)
+                    FileSelector()
+                        .CanSelectManyFiles()
+                        .LimitFileTypesTo(".resx")
+                        .OnFilesSelected(OnFilesSelected),
+                    Button()
+                        .Text("Click me")
+                        .OnClick(OnButtonClickAsync),
+                    ProgressRing(), _progressRing
                 );
 
             IUIStack rootElement = Stack()
                 .Vertical()
-                .WithChildren(horizontalSection, verticalSection, horizontalSection2);
+                .WithChildren(horizontalSection, verticalSection);
 
             return new UIToolView(true, rootElement);
         }
@@ -98,30 +89,34 @@ internal sealed class MyExtensionGui : IGuiTool
 
     private async ValueTask OnButtonClickAsync()
     {
-        
         try
         {
             if (_selectedFiles is not null && _selectedFiles.Any())
             {
+                _progressRing.StartIndeterminateProgress();
+
                 var file = _selectedFiles.FirstOrDefault();
                 if (file is not null)
                 {
                     await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
                     StreamReader streamReader = new StreamReader(stream);
-
+        
                     await using FileStream result = await _fileStorage.PickSaveFileAsync(".resx");
                     StreamWriter writer = new StreamWriter(result);
-
-
+        
+        
                     _azureTranslatorService = new AzureTranslatorService( _key, _region);
-
+        
                     XDocument xmlDoc =
                         await XDocument.LoadAsync(streamReader, LoadOptions.None, CancellationToken.None);
-
+        
                     await TranslateXmlValues(xmlDoc, _toLanguage, _fromLanguage);
-
+        
                     await writer.WriteAsync(xmlDoc.ToString());
                     await writer.FlushAsync();
+                    
+                    _progressRing.StopIndeterminateProgress();
+
                 }
             }
         }
