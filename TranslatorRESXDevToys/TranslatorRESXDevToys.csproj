@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>ResxTranslator</PackageId>
-    <Version>0.1.5-preview</Version>
+    <Version>0.1.6-preview</Version>
     <Authors>Pablo Suarez</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

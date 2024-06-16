@@ -1,10 +1,6 @@
 ﻿using DevToys.Api;
-using TranslatorRESXDevToys;
 using System.ComponentModel.Composition;
 using static DevToys.Api.GUI;
-using System.Reflection.Emit;
-using System.Reflection.PortableExecutable;
-using System.Threading;
 using System.Xml.Linq;
 using TranslatorRESXDevToys.Services;
 
@@ -14,7 +10,7 @@ namespace TranslatorRESXDevToys;
 [Name("TranslatorRESXDevToys")] // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons", // This font is available by default in DevToys
-    IconGlyph = '\uE670', // An icon that represents a pizza
+    IconGlyph = '\uF658',
     GroupName = PredefinedCommonToolGroupNames.Converters, // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(MyResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName =
