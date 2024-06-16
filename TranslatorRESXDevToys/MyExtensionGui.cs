@@ -18,7 +18,7 @@ namespace TranslatorRESXDevToys;
     GroupName = PredefinedCommonToolGroupNames.Converters, // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(MyResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName =
-        "TranslatorRESXDevToys.TranslatorRESXDevToys", // The full name (including namespace) of the resource file containing our localized texts
+        "TranslatorRESXDevToys.ExtensionText", // The full name (including namespace) of the resource file containing our localized texts
     ShortDisplayTitleResourceName =
         nameof(ExtensionText.ShortDisplayTitle), // The name of the resource to use for the short display title
     LongDisplayTitleResourceName = nameof(ExtensionText.LongDisplayTitle),
@@ -28,60 +28,76 @@ internal sealed class MyExtensionGui : IGuiTool
 {
     private SandboxedFileReader[]? _selectedFiles;
 
-    [Import]
-    private IFileStorage _fileStorage = null!;
+    [Import] private IFileStorage _fileStorage = null!;
 
     private string _fromLanguage = "en";
     private string _toLanguage = "es";
-    private string _region = "northeurope";
-    private string _key = "YOUR_KEY_HERE";
 
 
     private static AzureTranslatorService _azureTranslatorService;
 
     private readonly IUIProgressRing _progressRing = ProgressRing();
 
+    [Import] private ISettingsProvider _settingsProvider = null!;
+
+    private static readonly SettingDefinition<string> TranslatorKey =
+        new(name: $"{nameof(MyExtensionGui)}.{nameof(TranslatorKey)}", defaultValue: "");
+
+    private static readonly SettingDefinition<string> TranslatorRegion =
+        new(name: $"{nameof(MyExtensionGui)}.{nameof(TranslatorRegion)}", defaultValue: "");
+
     public UIToolView View
     {
         get
         {
- 
+            IUISplitGrid azureKeySection = SplitGrid()
+                .Vertical()
+                        .LeftPaneLength(new UIGridLength(2, UIGridUnitType.Fraction))
+                        .RightPaneLength(new UIGridLength(2, UIGridUnitType.Fraction))
+                        .WithLeftPaneChild(SingleLineTextInput()
+                            .Title(ExtensionText.AzureTranslatorKey)
+                            .Text(_settingsProvider.GetSetting(TranslatorKey))
+                            .OnTextChanged(key => _settingsProvider.SetSetting(TranslatorKey, key)))
+                        .WithRightPaneChild(SingleLineTextInput()
+                            .Title(ExtensionText.AzureTranslatorRegion)
+                            .Text(_settingsProvider.GetSetting(TranslatorRegion))
+                            .OnTextChanged(region => _settingsProvider.SetSetting(TranslatorRegion, region)));
 
-            IUIStack horizontalSection = Stack()
-                .Horizontal()
-                .WithChildren(
-                    SingleLineTextInput()
-                        .Title("From Language")
-                        .Text("en")
-                        .OnTextChanged(OnFromTextChanged),
-                    SingleLineTextInput()
-                        .Title("To Language")
-                        .Text("es")
-                        .OnTextChanged(OnToTextChanged)
-                );
+            IUISplitGrid horizontalSection = SplitGrid()
+                .Vertical()
+                .LeftPaneLength(new UIGridLength(2, UIGridUnitType.Fraction))
+                .RightPaneLength(new UIGridLength(2, UIGridUnitType.Fraction))
+                .WithLeftPaneChild(SingleLineTextInput()
+                    .Title(ExtensionText.FromLanguage)
+                    .Text("en")
+                    .OnTextChanged(text => _fromLanguage = text))
+                .WithRightPaneChild(SingleLineTextInput()
+                    .Title(ExtensionText.ToLanguage)
+                    .Text("es")
+                    .OnTextChanged(text => _toLanguage = text));
+
             
+
             IUIStack verticalSection = Stack()
                 .Vertical()
                 .WithChildren(
                     FileSelector()
                         .CanSelectManyFiles()
                         .LimitFileTypesTo(".resx")
-                        .OnFilesSelected(OnFilesSelected),
+                        .OnFilesSelected(file => _selectedFiles = file),
                     Button()
-                        .Text("Click me")
+                        .Text(ExtensionText.TranslateFile)
                         .OnClick(OnButtonClickAsync),
                     ProgressRing(), _progressRing
                 );
 
             IUIStack rootElement = Stack()
                 .Vertical()
-                .WithChildren(horizontalSection, verticalSection);
+                .WithChildren(azureKeySection, horizontalSection, verticalSection);
 
             return new UIToolView(true, rootElement);
         }
     }
-
-    
     public void OnDataReceived(string dataTypeName, object? parsedData)
     {
         // Handle Smart Detection.
@@ -100,23 +116,22 @@ internal sealed class MyExtensionGui : IGuiTool
                 {
                     await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
                     StreamReader streamReader = new StreamReader(stream);
-        
+
                     await using FileStream result = await _fileStorage.PickSaveFileAsync(".resx");
                     StreamWriter writer = new StreamWriter(result);
-        
-        
-                    _azureTranslatorService = new AzureTranslatorService( _key, _region);
-        
+
+
+                    _azureTranslatorService = new AzureTranslatorService(_settingsProvider.GetSetting(TranslatorKey), _settingsProvider.GetSetting(TranslatorRegion));
+
                     XDocument xmlDoc =
                         await XDocument.LoadAsync(streamReader, LoadOptions.None, CancellationToken.None);
-        
+
                     await TranslateXmlValues(xmlDoc, _toLanguage, _fromLanguage);
-        
+
                     await writer.WriteAsync(xmlDoc.ToString());
                     await writer.FlushAsync();
-                    
-                    _progressRing.StopIndeterminateProgress();
 
+                    _progressRing.StopIndeterminateProgress();
                 }
             }
         }
@@ -126,6 +141,7 @@ internal sealed class MyExtensionGui : IGuiTool
             throw;
         }
     }
+
     private static async Task TranslateXmlValues(XDocument xmlDoc, string targetLanguage, string fromLanguage)
     {
         var valueElements = xmlDoc.Descendants("data").Elements("value").ToList();
@@ -133,21 +149,9 @@ internal sealed class MyExtensionGui : IGuiTool
         foreach (var valueElement in valueElements)
         {
             string originalContent = valueElement.Value;
-            valueElement.Value = await _azureTranslatorService.Translator(fromLanguage, targetLanguage, originalContent);
+            valueElement.Value =
+                await _azureTranslatorService.Translator(fromLanguage, targetLanguage, originalContent);
         }
     }
-
-    private void OnFilesSelected(SandboxedFileReader[] files)
-    {
-        _selectedFiles = files;
-    }
-    private void OnFromTextChanged(string text)
-    {
-        _fromLanguage = text;
-    }
-
-    private void OnToTextChanged(string text)
-    {
-        _toLanguage = text;
-    }
+    
 }

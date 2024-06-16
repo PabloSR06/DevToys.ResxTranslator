@@ -123,13 +123,28 @@
   <data name="Description" xml:space="preserve">
     <value>A brief description of the tool, displayed in the grid of tools on the DevToys main page.</value>
   </data>
-  <data name="HelloWorldLabel" xml:space="preserve">
-    <value>A “hello world” text to be displayed in the tool's UI.</value>
-  </data>
   <data name="LongDisplayTitle" xml:space="preserve">
     <value>The tool's title, displayed at the top of the screen when the user navigates to the tool.</value>
   </data>
   <data name="ShortDisplayTitle" xml:space="preserve">
     <value>The tool's title, displayed in the DevToys sidebar.</value>
+  </data>
+  <data name="AzureTranslatorKey" xml:space="preserve">
+    <value>Azure Translator Key</value>
+  </data>
+  <data name="AzureTranslatorRegion" xml:space="preserve">
+    <value>Azure Translator Region</value>
+  </data>
+  <data name="FromLanguage" xml:space="preserve">
+    <value>From Language</value>
+  </data>
+  <data name="ToLanguage" xml:space="preserve">
+    <value>To Language</value>
+  </data>
+  <data name="TranslateFile" xml:space="preserve">
+    <value>Translate File</value>
+  </data>
+  <data name="SelectFile" xml:space="preserve">
+    <value>Select file to translate</value>
   </data>
 </root>
