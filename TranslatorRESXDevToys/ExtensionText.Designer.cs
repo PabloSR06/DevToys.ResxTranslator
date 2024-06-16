@@ -87,11 +87,38 @@ namespace TranslatorRESXDevToys {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Using Azure Translator Service translate the data of your resx file to another language..
         /// </summary>
         internal static string Description {
             get {
                 return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File updated.
+        /// </summary>
+        internal static string FileUpdated {
+            get {
+                return ResourceManager.GetString("FileUpdated", resourceCulture);
             }
         }
         
@@ -146,6 +173,15 @@ namespace TranslatorRESXDevToys {
         internal static string TranslateFile {
             get {
                 return ResourceManager.GetString("TranslateFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry!, An unexpected error has occurred..
+        /// </summary>
+        internal static string UnexpectedError {
+            get {
+                return ResourceManager.GetString("UnexpectedError", resourceCulture);
             }
         }
     }
