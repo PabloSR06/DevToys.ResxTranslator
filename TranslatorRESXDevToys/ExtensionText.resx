@@ -118,16 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessibleName" xml:space="preserve">
-    <value>A descriptive name of the tool, useful for users who rely on assistive technology such as screen readers.</value>
+    <value>Translate resx data</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>A brief description of the tool, displayed in the grid of tools on the DevToys main page.</value>
+    <value>Using Azure Translator Service translate the data of your resx file to another language.</value>
   </data>
   <data name="LongDisplayTitle" xml:space="preserve">
-    <value>The tool's title, displayed at the top of the screen when the user navigates to the tool.</value>
+    <value>Resx Translator</value>
   </data>
   <data name="ShortDisplayTitle" xml:space="preserve">
-    <value>The tool's title, displayed in the DevToys sidebar.</value>
+    <value>Resx Translator</value>
   </data>
   <data name="AzureTranslatorKey" xml:space="preserve">
     <value>Azure Translator Key</value>
