@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using TranslatorRESXDevToys.Models;
 
 namespace TranslatorRESXDevToys.Services
@@ -60,6 +61,7 @@ namespace TranslatorRESXDevToys.Services
             catch (Exception ex)
             {
                 Console.Write("Request error");
+                Console.WriteLine(ex);
             }
 
             Console.WriteLine("True");

@@ -26,19 +26,18 @@ namespace TranslatorRESXDevToys;
     AccessibleNameResourceName = nameof(ExtensionText.AccessibleName))]
 internal sealed class MyExtensionGui : IGuiTool
 {
-    private SandboxedFileReader[]? _selectedFiles;
+    private static AzureTranslatorService _azureTranslatorService;
 
+    [Import] private ISettingsProvider _settingsProvider = null!;
     [Import] private IFileStorage _fileStorage = null!;
+    
+    private SandboxedFileReader[]? _selectedFiles;
 
     private string _fromLanguage = "en";
     private string _toLanguage = "es";
-
-
-    private static AzureTranslatorService _azureTranslatorService;
-
+    
     private readonly IUIProgressRing _progressRing = ProgressRing();
 
-    [Import] private ISettingsProvider _settingsProvider = null!;
 
     private static readonly SettingDefinition<string> TranslatorKey =
         new(name: $"{nameof(MyExtensionGui)}.{nameof(TranslatorKey)}", defaultValue: "");

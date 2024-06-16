@@ -60,7 +60,7 @@ namespace TranslatorRESXDevToys {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A descriptive name of the tool, useful for users who rely on assistive technology such as screen readers..
+        ///   Looks up a localized string similar to Translate resx data.
         /// </summary>
         internal static string AccessibleName {
             get {
@@ -87,7 +87,7 @@ namespace TranslatorRESXDevToys {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A brief description of the tool, displayed in the grid of tools on the DevToys main page..
+        ///   Looks up a localized string similar to Using Azure Translator Service translate the data of your resx file to another language..
         /// </summary>
         internal static string Description {
             get {
@@ -105,7 +105,7 @@ namespace TranslatorRESXDevToys {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The tool&apos;s title, displayed at the top of the screen when the user navigates to the tool..
+        ///   Looks up a localized string similar to Resx Translator.
         /// </summary>
         internal static string LongDisplayTitle {
             get {
@@ -123,7 +123,7 @@ namespace TranslatorRESXDevToys {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The tool&apos;s title, displayed in the DevToys sidebar..
+        ///   Looks up a localized string similar to Resx Translator.
         /// </summary>
         internal static string ShortDisplayTitle {
             get {

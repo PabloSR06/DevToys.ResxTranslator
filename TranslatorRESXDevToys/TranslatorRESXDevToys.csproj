@@ -1,10 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>ResxTranslator</PackageId>
+    <Version>0.1.0-preview</Version>
+    <Authors>Pablo Suarez</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Using Azure Translator Service translate the data of your resx file to another language.</Description>
   </PropertyGroup>
+
+
 
   <ItemGroup>
     <PackageReference Include="DevToys.Api" Version="2.0.0-preview.3" />
