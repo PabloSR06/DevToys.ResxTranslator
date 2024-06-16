@@ -5,11 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>ResxTranslator</PackageId>
-    <Version>0.1.2-preview</Version>
+    <Version>0.1.3-preview</Version>
     <Authors>Pablo Suarez</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Using Azure Translator Service translate the data of your resx file to another language.</Description>
+    <RepositoryUrl>https://github.com/PabloSR06/TranslatorRESXDevToys</RepositoryUrl>
   </PropertyGroup>
 
 
