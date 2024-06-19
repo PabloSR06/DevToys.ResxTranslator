@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TranslatorRESXDevToys {
+namespace RESXTranslator {
     using System;
     
     
@@ -38,7 +38,7 @@ namespace TranslatorRESXDevToys {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TranslatorRESXDevToys.ExtensionText", typeof(ExtensionText).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RESXTranslator.ExtensionText", typeof(ExtensionText).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

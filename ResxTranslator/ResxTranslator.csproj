@@ -4,14 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>ResxTranslator</PackageId>
-    <Version>0.1.6-preview</Version>
+    <PackageId>DevToys.ResxTranslator</PackageId>
+    <Version>0.1.8-preview</Version>
     <Authors>Pablo Suarez</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>RESX Translator DevToys</Title>
     <Description>Using Azure Translator Service translate the data of your resx file to another language.</Description>
-    <RepositoryUrl>https://github.com/PabloSR06/TranslatorRESXDevToys</RepositoryUrl>
+    <RepositoryUrl>https://github.com/PabloSR06/RESXTranslator</RepositoryUrl>
   </PropertyGroup>
 
 

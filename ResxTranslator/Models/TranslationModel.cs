@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TranslatorRESXDevToys.Models
+namespace RESXTranslator.Models
 {
 
     class TranslationList
