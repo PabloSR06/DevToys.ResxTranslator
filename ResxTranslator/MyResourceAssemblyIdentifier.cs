@@ -1,7 +1,7 @@
 ﻿using DevToys.Api;
 using System.ComponentModel.Composition;
 
-namespace RESXTranslator
+namespace ResxTranslator
 {
     [Export(typeof(IResourceAssemblyIdentifier))]
     [Name(nameof(MyResourceAssemblyIdentifier))]

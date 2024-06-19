@@ -2,19 +2,19 @@
 using System.ComponentModel.Composition;
 using static DevToys.Api.GUI;
 using System.Xml.Linq;
-using RESXTranslator.Services;
+using ResxTranslator.Services;
 
-namespace RESXTranslator;
+namespace ResxTranslator;
 
 [Export(typeof(IGuiTool))]
-[Name("RESXTranslator")] // A unique, internal name of the tool.
+[Name("ResxTranslator")] // A unique, internal name of the tool.
 [ToolDisplayInformation(
     IconFontName = "FluentSystemIcons", // This font is available by default in DevToys
     IconGlyph = '\uF658',
     GroupName = PredefinedCommonToolGroupNames.Converters, // The group in which the tool will appear in the side bar.
     ResourceManagerAssemblyIdentifier = nameof(MyResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName =
-        "RESXTranslator.ExtensionText", // The full name (including namespace) of the resource file containing our localized texts
+        "ResxTranslator.ExtensionText", // The full name (including namespace) of the resource file containing our localized texts
     ShortDisplayTitleResourceName =
         nameof(ExtensionText.ShortDisplayTitle), // The name of the resource to use for the short display title
     LongDisplayTitleResourceName = nameof(ExtensionText.LongDisplayTitle),

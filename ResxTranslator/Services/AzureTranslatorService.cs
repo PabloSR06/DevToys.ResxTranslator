@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using RESXTranslator.Models;
+using ResxTranslator.Models;
 
-namespace RESXTranslator.Services
+namespace ResxTranslator.Services
 {
     public class AzureTranslatorService
     {
