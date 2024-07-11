@@ -12,7 +12,7 @@ namespace ResxTranslator;
     IconFontName = "FluentSystemIcons", // This font is available by default in DevToys
     IconGlyph = '\uF658',
     GroupName = PredefinedCommonToolGroupNames.Converters, // The group in which the tool will appear in the side bar.
-    ResourceManagerAssemblyIdentifier = nameof(MyResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
+    ResourceManagerAssemblyIdentifier = nameof(ResxTranslatorResourceAssemblyIdentifier), // The Resource Assembly Identifier to use
     ResourceManagerBaseName =
         "ResxTranslator.ExtensionText", // The full name (including namespace) of the resource file containing our localized texts
     ShortDisplayTitleResourceName =
