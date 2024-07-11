@@ -76,7 +76,7 @@ internal sealed class MyExtensionGui : IGuiTool
                 .WithChildren(
                     FileSelector()
                         .CanSelectManyFiles()
-                        .LimitFileTypesTo(".resx")
+                        .LimitFileTypesTo(".resx", ".resw")
                         .OnFilesSelected(file => _selectedFiles = file),
                     Button()
                         .Text(ExtensionText.TranslateFile)
@@ -114,7 +114,7 @@ internal sealed class MyExtensionGui : IGuiTool
                     await using Stream stream = await file.GetNewAccessToFileContentAsync(CancellationToken.None);
                     StreamReader streamReader = new StreamReader(stream);
         
-                    await using FileStream result = await _fileStorage.PickSaveFileAsync(".resx");
+                    await using FileStream result = await _fileStorage.PickSaveFileAsync(".resx", ".resw");
                     StreamWriter writer = new StreamWriter(result);
         
         
