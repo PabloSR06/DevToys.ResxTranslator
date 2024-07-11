@@ -4,8 +4,8 @@ using System.ComponentModel.Composition;
 namespace ResxTranslator
 {
     [Export(typeof(IResourceAssemblyIdentifier))]
-    [Name(nameof(MyResourceAssemblyIdentifier))]
-    internal sealed class MyResourceAssemblyIdentifier : IResourceAssemblyIdentifier
+    [Name(nameof(ResxTranslatorResourceAssemblyIdentifier))]
+    internal sealed class ResxTranslatorResourceAssemblyIdentifier : IResourceAssemblyIdentifier
     {
         public ValueTask<FontDefinition[]> GetFontDefinitionsAsync()
         {
